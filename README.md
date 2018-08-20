@@ -1,7 +1,7 @@
 # EvoTransitions
 Custom NavigationRenderers for Xamarin.Forms (IOS and Android) to activate shared element transitions between two screens.
 
-Its a proof of concept with the following limitations:
+Its a <b>proof of concept</b> with the following limitations:
 
 1) Works only between pages in a NavigationPage container
 2) Transitions betweeen listview and details page are not currently supported (coming soon)

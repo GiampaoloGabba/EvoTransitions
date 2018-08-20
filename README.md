@@ -8,7 +8,6 @@ Its a <b>proof of concept</b> with the following limitations:
 3) To save time, my custom renderers export directly to NavigationPage.
 In your projects its better to create a custom NavigationPage and use it only when transitions are needed.
  
-
 ## Basic usage
 
 - Use the TagEffect to attach numeric tags to the views you want to animate (in both source and destination page)
@@ -25,5 +24,9 @@ In your projects its better to create a custom NavigationPage and use it only wh
 **IOS** *(FLuid video with cats!)*<br><br>
 <a href="https://www.youtube.com/watch?v=A826mg30D7" target="_blank"><img src="https://img.youtube.com/vi/A826mg30D74/0.jpg"></a>
 
+## References
+
+- Xamarin.Forms issue: <a href="https://github.com/xamarin/Xamarin.Forms/issues/3334">#3334</a>
+- Repository that pointed me in the right direction: <a href="https://github.com/GalaxiaGuy/SharedElementTest">GalaxiaGuy/SharedElementTest</a>
 
 

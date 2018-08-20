@@ -167,6 +167,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\cat.jpg" />
+    <BundleResource Include="Resources\mydog.jpg" />
   </ItemGroup>
 </Project>

@@ -15,6 +15,7 @@
         <Image Source="mydog.jpg"  effects:TagEffect.Tag="1" WidthRequest="100" />
         <Image Source="mydog.jpg"  effects:TagEffect.Tag="2" WidthRequest="100" HeightRequest="100" Aspect="AspectFit"  />
         <Button Text="Test"  effects:TagEffect.Tag="3" BackgroundColor="Aqua"></Button>
+
     </StackLayout>
 
 </ContentPage>

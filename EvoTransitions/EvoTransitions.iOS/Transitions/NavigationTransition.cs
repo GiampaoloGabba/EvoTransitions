@@ -41,7 +41,15 @@ namespace EvoTransitions.iOS.Transitions
                 if (_toView[i] == null || _fromView.Count == 0)
                     break;
 
-                UIView fromView = _fromView.FirstOrDefault(x => x.Tag == _toView[i].Tag);
+                UIView fromView = null;
+                try
+                {
+                    fromView = _fromView.FirstOrDefault(x => x.Tag == _toView[i].Tag);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
 
                 //No matching views in the start controller :(
                 if (fromView == null)

@@ -1,11 +1,12 @@
-# EvoTransitions
+# Shared Element Transitions in Xamarin.Forms
 Custom NavigationRenderers for Xamarin.Forms (IOS and Android) to activate shared element transitions between two screens.
 
 Its a <b>proof of concept</b> with the following limitations:
 
 1) Works only between pages in a NavigationPage container
 2) Transitions betweeen listview and details page are not currently supported (coming soon)
-3) To save time, my custom renderers export directly to NavigationPage.
+3) Transitions dont works on layout containers (stacklayout, grid, frame, ecc.). They works only on controls like (image, button, label, ecc.)
+4) To save time, my custom renderers export directly to NavigationPage.
 In your projects its better to create a custom NavigationPage and use it only when transitions are needed.
  
 ## Basic usage
@@ -13,6 +14,7 @@ In your projects its better to create a custom NavigationPage and use it only wh
 - Use the TagEffect to attach numeric tags to the views you want to animate (in both source and destination page)
 - Source and destination views need to have the same numeric tag
 - Every tag in a single page needs to be unique
+- In Android dont forget to add the custom transition XML in : <a href="https://github.com/Evolutionlab/EvoTransitions/blob/master/EvoTransitions/EvoTransitions.Android/Resources/transition/navigation_transition.xml">Resources/transition/navigation_transition.xml</a>
 - In IOS, after a push, you can use the swipe to right (from the left edge) to get back to the previous page. The transition will follow the span gesture
 
 ## Examples

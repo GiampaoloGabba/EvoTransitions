@@ -22,11 +22,11 @@ In your projects its better to create a custom NavigationPage and use it only wh
 <br><br>
 
 **IOS** *(Fluid video with cats!)*<br><br>
-<a href="https://www.youtube.com/watch?v=A826mg30D7" target="_blank"><img src="https://img.youtube.com/vi/A826mg30D74/0.jpg"></a>
+<a href="https://www.youtube.com/watch?v=A826mg30D74" target="_blank"><img src="https://img.youtube.com/vi/A826mg30D74/0.jpg"></a>
 
 ## References
 
 - Xamarin.Forms issue: <a href="https://github.com/xamarin/Xamarin.Forms/issues/3334">#3334</a>
-- Repository that pointed me in the right direction (*thank you!*): <a href="https://github.com/GalaxiaGuy/SharedElementTest">GalaxiaGuy/SharedElementTest</a>
+- Repository that pointed me in the right direction for ios (*thank you!*): <a href="https://github.com/GalaxiaGuy/SharedElementTest">GalaxiaGuy/SharedElementTest</a>
 
 

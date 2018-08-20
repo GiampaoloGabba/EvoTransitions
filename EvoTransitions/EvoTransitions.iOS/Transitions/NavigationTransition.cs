@@ -22,7 +22,6 @@ namespace EvoTransitions.iOS.Transitions
         private readonly List<UIView> _toView;
         private readonly UINavigationControllerOperation _operation;
 
-
         public override async void AnimateTransition(IUIViewControllerContextTransitioning transitionContext)
         {
             var containerView = transitionContext.ContainerView;
@@ -75,7 +74,6 @@ namespace EvoTransitions.iOS.Transitions
                 //minor perf gain
                 fromViewSnapshot.Opaque = true;
                 containerView.AddSubview(fromViewSnapshot);
-
                 fromViewSnapshot.Frame = fromView.ConvertRectToView(fromViewFrame, containerView);
 
                 // Without this, the snapshots will include the following "recent" changes

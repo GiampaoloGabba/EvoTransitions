@@ -14,9 +14,7 @@ namespace EvoTransitions.Droid.Effects
         protected override void OnAttached()
         {
             if (Control == null)
-            {
                 return;
-            }
 
             Control.Tag = EvoTransitions.Effects.TagEffect.GetTag(Element as View);
             Control.TransitionName = "transition_" + Control.Tag;

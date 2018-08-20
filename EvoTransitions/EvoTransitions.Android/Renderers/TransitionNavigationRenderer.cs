@@ -31,16 +31,13 @@ namespace EvoTransitions.Droid.Renderers
         protected override void SetupPageTransition(FragmentTransaction transaction, bool isPush)
         {
             var fragments = _fragmentManager.Fragments;
-
             var fragmentToLeave = fragments.Last();
-
+            
             _viewList = fragmentToLeave.View.GetSubviewsWithTransitionName();
-
             foreach (var transitionView in _viewList)
             {
                 transaction.AddSharedElement(transitionView, transitionView.TransitionName);
             }
-
             transaction.SetAllowOptimization(true);
 
             //This is needed to make shared transitions works with hide & add fragments instead of .replace
@@ -48,7 +45,6 @@ namespace EvoTransitions.Droid.Renderers
             
             //Change the default transition for non shared elements.
             transaction.SetTransition((int)FragmentTransit.FragmentFade);
-
         }
 
         public override void AddView(View child)
@@ -64,7 +60,6 @@ namespace EvoTransitions.Droid.Renderers
                     var fragmentToPush = fragments.Last();
 
                     var navigationTransition = TransitionInflater.From(Context).InflateTransition(Resource.Transition.navigation_transition);
-
                     fragmentToPush.SharedElementEnterTransition  = navigationTransition;
                     fragmentToPop.SharedElementEnterTransition = navigationTransition;
                 }

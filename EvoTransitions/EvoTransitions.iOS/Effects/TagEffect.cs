@@ -12,9 +12,7 @@ namespace EvoTransitions.iOS.Effects
         protected override void OnAttached()
         {
             if (Control == null)
-            {
                 return;
-            }
 
             Control.Tag = EvoTransitions.Effects.TagEffect.GetTag(Element as View);
         }

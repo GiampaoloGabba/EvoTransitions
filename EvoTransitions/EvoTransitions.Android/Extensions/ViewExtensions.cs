@@ -13,11 +13,9 @@ namespace EvoTransitions.Droid.Extensions
                 Traverse(startViewGroup);
             else if (!string.IsNullOrEmpty(startView.TransitionName))
                 result.Add(startView);
-            
 
             void Traverse(ViewGroup parentView)
             {
-
                 for (int i = 0; i < parentView.ChildCount; i++)
                 {
                     View vChild = parentView.GetChildAt(i);

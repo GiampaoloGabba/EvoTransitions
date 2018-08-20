@@ -5,7 +5,8 @@ Its a <b>proof of concept</b> with the following limitations:
 
 1) Works only between pages in a NavigationPage container
 2) Transitions betweeen listview and details page are not currently supported (coming soon)
-3) To save time, my custom renderers export directly to NavigationPage.
+3) Transitions dont works on layout containers (stacklayout, grid, frame, ecc.). They works only on controls like (image, button, label, ecc.)
+4) To save time, my custom renderers export directly to NavigationPage.
 In your projects its better to create a custom NavigationPage and use it only when transitions are needed.
  
 ## Basic usage

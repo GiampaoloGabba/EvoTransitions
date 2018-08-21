@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Android.App;
 using Android.Content;
@@ -7,6 +8,7 @@ using Android.Support.Transitions;
 using Android.Support.V7.Widget;
 using EvoTransitions.Droid.Extensions;
 using EvoTransitions.Droid.Renderers;
+using Java.Lang;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms.Platform.Android.AppCompat;
@@ -38,7 +40,6 @@ namespace EvoTransitions.Droid.Renderers
             {
                 transaction.AddSharedElement(transitionView, transitionView.TransitionName);
             }
-            transaction.SetAllowOptimization(true);
 
             //This is needed to make shared transitions works with hide & add fragments instead of .replace
             transaction.SetReorderingAllowed(true);
@@ -53,7 +54,7 @@ namespace EvoTransitions.Droid.Renderers
             {
                 var fragments = _fragmentManager.Fragments;
 
-                //set transitions only when we have at least 2 fragments (during push or pop)
+                //set transitions only when we have at least 2 fragments (push)
                 if (fragments.Count > 1 && Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
                 {
                     var fragmentToPop = fragments[fragments.Count - 2];

@@ -1,5 +1,5 @@
 # Shared Element Transitions in Xamarin.Forms
-Custom NavigationRenderers for Xamarin.Forms (IOS and Android) to activate shared element transitions between two screens.
+Custom NavigationRenderers for Xamarin.Forms (IOS and Android) to activate shared element transitions between two page.
 
 Its a <b>proof of concept</b> with the following limitations:
 

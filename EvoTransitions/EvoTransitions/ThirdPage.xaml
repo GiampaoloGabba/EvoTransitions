@@ -3,17 +3,15 @@
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
     xmlns:effects="clr-namespace:EvoTransitions.Effects;assembly=EvoTransitions"
-    x:Class="EvoTransitions.SecondPage" 
+    x:Class="EvoTransitions.ThirdPage" 
     BackgroundColor="Blue" 
-    Title="Second Page">
+    Title="Third Page">
 
     <StackLayout VerticalOptions="Start" HorizontalOptions="Center">
-        <StackLayout.GestureRecognizers>
-            <TapGestureRecognizer Tapped="ImageTapped"/>
-        </StackLayout.GestureRecognizers>
-        <Image Source="mydog.jpg" effects:TagEffect.Tag="1" WidthRequest="100" HorizontalOptions="Center" VerticalOptions="Start"/>
-        <Image Source="mydog.jpg" effects:TagEffect.Tag="2" HorizontalOptions="Center" VerticalOptions="Start" />
         <Button Text="Test" effects:TagEffect.Tag="3" BackgroundColor="Aqua" />
+        <Image Source="mydog.jpg" effects:TagEffect.Tag="1" WidthRequest="150" HorizontalOptions="Center" VerticalOptions="Start"/>
+        <Image Source="mydog.jpg" effects:TagEffect.Tag="2" WidthRequest="150" HorizontalOptions="Center" VerticalOptions="Start" />
+        
     </StackLayout>
 
 </ContentPage>

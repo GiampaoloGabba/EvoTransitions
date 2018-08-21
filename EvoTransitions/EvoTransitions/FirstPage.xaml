@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
     xmlns:effects="clr-namespace:EvoTransitions.Effects;assembly=EvoTransitions"
     x:Class="EvoTransitions.FirstPage" 
-    BackgroundColor="Red" 
+    BackgroundColor="Blue" 
     Title="First Page">
 
     <StackLayout Orientation="Horizontal" VerticalOptions="Start">

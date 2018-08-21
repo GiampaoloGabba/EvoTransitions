@@ -10,5 +10,9 @@ namespace EvoTransitions
             InitializeComponent();
         }
 
+        private void ImageTapped(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new ThirdPage());
+        }
     }
 }

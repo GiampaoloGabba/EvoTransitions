@@ -12,7 +12,7 @@ namespace EvoTransitions
             InitializeComponent();
 
             SharedTransitionNavigationPage.SetBackgroundTransition(this, BackgroundTransition.None);
-            SharedTransitionNavigationPage.SetSharedTransitionDurationProperty(this, 1000);
+            SharedTransitionNavigationPage.SetSharedTransitionDurationProperty(this, 500);
         }
 
         private void ImageTapped(object sender, EventArgs e)

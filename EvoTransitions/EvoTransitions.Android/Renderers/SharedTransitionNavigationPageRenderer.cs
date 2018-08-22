@@ -110,14 +110,16 @@ namespace EvoTransitions.Droid.Renderers
             base.AddView(child);
         }
 
-        protected override Task<bool> OnPushAsync(Page page, bool animated)
+        protected override async Task<bool> OnPushAsync(Page page, bool animated)
         {
             //At the very start of the navigationpage push occour inflating the first view
             //We save it immediately so we can access the Navigation options needed for the first transaction
             if (Element.Navigation.NavigationStack.Count == 1)
                 Current = page;
 
-            return base.OnPushAsync(page, animated);
+            var result = await base.OnPushAsync(page, animated);
+
+            return result;
         }
 
         protected override async Task<bool> OnPopViewAsync(Page page, bool animated)
@@ -128,17 +130,17 @@ namespace EvoTransitions.Droid.Renderers
 
             Current = pageToShow;
 
-            var result = await base.OnPopViewAsync(page, animated);
-
-            if (_fragmentManager.Fragments.Count <= 2)
-                _transitionNameUpdated = false;
-
             //This is ugly but is needed!
             //If we press the back button very fast when we have more than 2 fragments in the stack,
             //unexpected behaviours can happen during pop (this is due to SetReorderingAllowed).
             //So we need to add a small delay for fast pop clicks starting the third fragment on stack.
             if (_fragmentManager.Fragments.Count > 2)
                 await Task.Delay(100);
+
+            var result = await base.OnPopViewAsync(page, animated);
+
+            if (_fragmentManager.Fragments.Count <= 2)
+                _transitionNameUpdated = false;
 
             return result;
         }

@@ -1,7 +1,9 @@
 # Shared Element Transitions in Xamarin.Forms
 Custom NavigationRenderers for Xamarin.Forms (IOS and Android) to activate shared element transitions between pages in a NavigationPage container.
 
-Its a <b>proof of concept</b> with the following limitations:
+<img src="http://www.evolutionlab.it/github/transition_droid_new.gif" height="500">
+
+It's a <b>proof of concept</b> with the following limitations:
 
 1) Works only between pages in a NavigationPage container
 2) Transitions betweeen listview and details page are not currently supported (coming soon)
@@ -25,7 +27,7 @@ They are bindable properties to set inside pages (much like the other Navigation
 *Old images but useful to understand what this project does*
 
 **Android** *(Poor quality gif with dogs!)*<br><br>
-<img src="http://www.evolutionlab.it/github/transition_droid.gif" height="500">
+<img src="http://www.evolutionlab.it/github/transition_droid_new.gif" height="500">
 <br><br>
 
 **IOS** *(Fluid video with cats!)*<br><br>

@@ -3,32 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreGraphics;
+using EvoTransitions.Enums;
 using EvoTransitions.iOS.Extensions;
+using EvoTransitions.iOS.Renderers;
 using Foundation;
 using UIKit;
+using Xamarin.Forms;
 
 namespace EvoTransitions.iOS.Transitions
 {
     public class NavigationTransition : UIViewControllerAnimatedTransitioning
     {
-        public NavigationTransition(List<UIView> fromView, List<UIView> toView, UINavigationControllerOperation operation)
+        BackgroundTransition _backgroundTransition;
+        double _sharedTransitionDuration;
+
+        public NavigationTransition(List<UIView> fromView, List<UIView> toView, UINavigationControllerOperation operation, BackgroundTransition backgroundTransition, double sharedTransitionDuration)
         {
             _fromView = fromView;
             _toView = toView;
             _operation = operation;
+
+            _backgroundTransition = backgroundTransition;
+            _sharedTransitionDuration = sharedTransitionDuration;
+
+            MessagingCenter.Subscribe<SharedTransitionNavigationRenderer>(this, "UpdateBackgroundTransition",
+                sender => { _backgroundTransition = sender.BackgroundTransition; });
+
+            MessagingCenter.Subscribe<SharedTransitionNavigationRenderer>(this, "UpdateSharedTransitionDuration",
+                sender => { _sharedTransitionDuration = sender.SharedTransitionDuration; });
         }
 
-        private readonly List<UIView> _fromView;
-        private readonly List<UIView> _toView;
-        private readonly UINavigationControllerOperation _operation;
+        readonly List<UIView> _fromView;
+        readonly List<UIView> _toView;
+        readonly UINavigationControllerOperation _operation;
 
         public override async void AnimateTransition(IUIViewControllerContextTransitioning transitionContext)
         {
             var containerView = transitionContext.ContainerView;
             var fromViewController = transitionContext.GetViewControllerForKey(UITransitionContext.FromViewControllerKey);
             var toViewController = transitionContext.GetViewControllerForKey(UITransitionContext.ToViewControllerKey);
-
-            var viewAnimated = false;
 
             // This needs to be added to the view hierarchy for the destination frame to be correct,
             // but we don't want it visible yet.
@@ -51,11 +64,9 @@ namespace EvoTransitions.iOS.Transitions
                     Console.WriteLine(e);
                 }
 
-                //No matching views in the start controller :(
+                //No matching views in the start controller
                 if (fromView == null)
                     break;
-
-                viewAnimated = true;
 
                 UIView fromViewSnapshot;
                 CGRect fromViewFrame = fromView.Frame;
@@ -116,40 +127,34 @@ namespace EvoTransitions.iOS.Transitions
 
             containerView.InsertSubview(toViewController.View, 1);
 
-            //No views to animate, use the standard slide animation
-            if (!viewAnimated)
+            if (_backgroundTransition == BackgroundTransition.None)
             {
-                var toViewInitialX = _operation == UINavigationControllerOperation.Pop
-                    ? -toViewController.View.Frame.Width
-                    : toViewController.View.Frame.Width;
-
-                toViewController.View.Frame = new CGRect(toViewInitialX, fromViewController.View.Frame.Y,
-                    toViewController.View.Frame.Width, toViewController.View.Frame.Height);
+                UIView.Animate(0, 0, UIViewAnimationOptions.TransitionNone, () =>
+                {
+                    toViewController.View.Alpha = 1;
+                }, () => { transitionContext.CompleteTransition(!transitionContext.TransitionWasCancelled); });
             }
-
-            UIView.Animate(TransitionDuration(transitionContext), 0, UIViewAnimationOptions.CurveEaseInOut, () =>
+            else
             {
-                //No views to animate, use the standard slide animation
-                if (!viewAnimated)
+                UIView.Animate(TransitionDuration(transitionContext), 0, UIViewAnimationOptions.CurveLinear, () =>
                 {
-                    toViewController.View.Frame = new CGRect(
-                        fromViewController.View.Frame.X,
-                        fromViewController.View.Frame.Y,
-                        toViewController.View.Frame.Width,
-                        toViewController.View.Frame.Height);
-                }
-                else
-                {
+                    toViewController.View.Alpha = 1;
                     fromViewController.View.Alpha = 0;
-                }
-
-                toViewController.View.Alpha = 1;
-            }, () => { transitionContext.CompleteTransition(!transitionContext.TransitionWasCancelled); });
-
+                }, () => { transitionContext.CompleteTransition(!transitionContext.TransitionWasCancelled); });
+            }
         }
 
-        public override double TransitionDuration(IUIViewControllerContextTransitioning transitionContext) => .250;
+        public override double TransitionDuration(IUIViewControllerContextTransitioning transitionContext)
+        {
+            return _sharedTransitionDuration;
+        }
 
+        protected override void Dispose(bool disposing)
+        {
+            MessagingCenter.Unsubscribe<SharedTransitionNavigationRenderer>(this, "UpdateBackgroundTransition");
+            MessagingCenter.Unsubscribe<SharedTransitionNavigationRenderer>(this, "UpdateSharedTransitionDuration");
 
+            base.Dispose(disposing);
+        }
     }
 }

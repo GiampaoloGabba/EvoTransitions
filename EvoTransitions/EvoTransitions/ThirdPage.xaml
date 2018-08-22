@@ -8,10 +8,9 @@
     Title="Third Page">
 
     <StackLayout VerticalOptions="Start" HorizontalOptions="Center">
-        <Button Text="Test" effects:TagEffect.Tag="3" BackgroundColor="Aqua" />
+        <Button Text=" Button " effects:TagEffect.Tag="3" BackgroundColor="Aqua" />
         <Image Source="mydog.jpg" effects:TagEffect.Tag="1" WidthRequest="150" HorizontalOptions="Center" VerticalOptions="Start"/>
         <Image Source="mydog.jpg" effects:TagEffect.Tag="2" WidthRequest="150" HorizontalOptions="Center" VerticalOptions="Start" />
-        
     </StackLayout>
 
 </ContentPage>

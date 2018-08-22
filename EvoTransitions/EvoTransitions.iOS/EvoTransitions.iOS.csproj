@@ -97,7 +97,7 @@
     <Compile Include="Extensions\ViewExtensions.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="Renderers\TransitionNavigationRenderer.cs" />
+    <Compile Include="Renderers\SharedTransitionNavigationRenderer.cs" />
     <Compile Include="Transitions\NavigationTransition.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist">

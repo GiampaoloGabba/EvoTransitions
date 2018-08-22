@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using EvoTransitions.Controls;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -10,7 +11,7 @@ namespace EvoTransitions
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new FirstPage());
+            MainPage = new SharedTransitionNavigationPage(new FirstPage());
         }
 
         protected override void OnStart()

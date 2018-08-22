@@ -1,4 +1,5 @@
 ﻿using System;
+using EvoTransitions.Controls;
 using Xamarin.Forms;
 
 namespace EvoTransitions

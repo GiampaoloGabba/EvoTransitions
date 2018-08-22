@@ -13,7 +13,7 @@ namespace EvoTransitions.iOS.Effects
         {
             if (Control == null)
                 return;
-
+            
             Control.Tag = EvoTransitions.Effects.TagEffect.GetTag(Element as View);
         }
 

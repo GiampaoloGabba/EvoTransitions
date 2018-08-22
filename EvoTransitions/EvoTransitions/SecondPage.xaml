@@ -7,13 +7,16 @@
     BackgroundColor="Blue" 
     Title="Second Page">
 
-    <StackLayout VerticalOptions="Start" HorizontalOptions="Center">
-        <StackLayout.GestureRecognizers>
-            <TapGestureRecognizer Tapped="ImageTapped"/>
-        </StackLayout.GestureRecognizers>
-        <Image Source="mydog.jpg" effects:TagEffect.Tag="1" WidthRequest="100" HorizontalOptions="Center" VerticalOptions="Start"/>
-        <Image Source="mydog.jpg" effects:TagEffect.Tag="2" HorizontalOptions="Center" VerticalOptions="Start" />
-        <Button Text="Test" effects:TagEffect.Tag="3" BackgroundColor="Aqua" />
+    <StackLayout>
+        <StackLayout VerticalOptions="Start" HorizontalOptions="Center">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Tapped="ImageTapped"/>
+            </StackLayout.GestureRecognizers>
+
+            <Image Source="mydog.jpg" effects:TagEffect.Tag="1" WidthRequest="100" HorizontalOptions="Center" VerticalOptions="Start"/>
+            <Image Source="mydog.jpg" effects:TagEffect.Tag="2" HorizontalOptions="Center" VerticalOptions="Start" />
+            <Button Text=" Button " effects:TagEffect.Tag="3" BackgroundColor="Aqua" />
+        </StackLayout>
     </StackLayout>
 
 </ContentPage>

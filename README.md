@@ -7,7 +7,7 @@ It's a <b>proof of concept</b> with the following limitations:
 
 1) Works only between pages in a NavigationPage container
 2) Transitions betweeen listview and details page are not currently supported (coming soon)
-3) Transitions works on all controls (image, button, label, entry, ecc.), not layout containers (stacklayout, grid, ecc..)
+3) Transitions works if assigned to a control (image, button, label, entry, ecc.), not layout containers (stacklayout, grid, ecc..)
 
 ## Basic usage
 

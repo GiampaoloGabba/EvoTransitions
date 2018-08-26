@@ -12,9 +12,9 @@
             <TapGestureRecognizer Tapped="ImageTapped"/>
         </StackLayout.GestureRecognizers>
 
-        <Image Source="mydog.jpg"  effects:TagEffect.Tag="1" WidthRequest="100" />
-        <Image Source="mydog.jpg"  effects:TagEffect.Tag="2" WidthRequest="100" HeightRequest="100" Aspect="AspectFit"  />
-        <Button Text=" Button "  effects:TagEffect.Tag="3" BackgroundColor="Aqua" HeightRequest="50" VerticalOptions="Center"/>
+        <Image Source="mydog.jpg"  effects:TransitionEffect.Tag="1" effects:TransitionEffect.TagGroup="1" WidthRequest="100" />
+        <Image Source="mydog.jpg"  effects:TransitionEffect.Tag="2" effects:TransitionEffect.TagGroup="1" WidthRequest="100" HeightRequest="100" Aspect="AspectFit"  />
+        <Button Text=" Button "  effects:TransitionEffect.Tag="3" effects:TransitionEffect.TagGroup="1" BackgroundColor="Aqua" HeightRequest="50" VerticalOptions="Center" Clicked="Button_OnClicked"/>
     </StackLayout>
 
 </ContentPage>

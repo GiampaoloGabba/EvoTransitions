@@ -11,5 +11,9 @@ namespace EvoTransitions
             InitializeComponent();
         }
 
+        private async void ImageTapped(object sender, EventArgs e)
+        {
+            await Navigation.PopToRootAsync();
+        }
     }
 }

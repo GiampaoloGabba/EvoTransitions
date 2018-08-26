@@ -1,6 +1,6 @@
 ﻿namespace EvoTransitions.Enums
 {
-    public enum BackgroundTransition
+    public enum BackgroundAnimation
     {
         /// <summary>
         /// Do not animate the transition.

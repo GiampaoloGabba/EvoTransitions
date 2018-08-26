@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoreGraphics;
 using EvoTransitions.Enums;
@@ -8,34 +6,21 @@ using EvoTransitions.iOS.Extensions;
 using EvoTransitions.iOS.Renderers;
 using Foundation;
 using UIKit;
-using Xamarin.Forms;
 
 namespace EvoTransitions.iOS.Transitions
 {
     public class NavigationTransition : UIViewControllerAnimatedTransitioning
     {
-        BackgroundTransition _backgroundTransition;
-        double _sharedTransitionDuration;
-
-        public NavigationTransition(List<UIView> fromView, List<UIView> toView, UINavigationControllerOperation operation, BackgroundTransition backgroundTransition, double sharedTransitionDuration)
-        {
-            _fromView = fromView;
-            _toView = toView;
-            _operation = operation;
-
-            _backgroundTransition = backgroundTransition;
-            _sharedTransitionDuration = sharedTransitionDuration;
-
-            MessagingCenter.Subscribe<SharedTransitionNavigationRenderer>(this, "UpdateBackgroundTransition",
-                sender => { _backgroundTransition = sender.BackgroundTransition; });
-
-            MessagingCenter.Subscribe<SharedTransitionNavigationRenderer>(this, "UpdateSharedTransitionDuration",
-                sender => { _sharedTransitionDuration = sender.SharedTransitionDuration; });
-        }
-
-        readonly List<UIView> _fromView;
-        readonly List<UIView> _toView;
+        readonly SharedTransitionNavigationRenderer _navigationPage;
+        readonly List<(UIView ToView, UIView FromView)> _viewsToAnimate;
         readonly UINavigationControllerOperation _operation;
+
+        public NavigationTransition(List<(UIView ToView, UIView FromView)> viewsToAnimate, UINavigationControllerOperation operation, SharedTransitionNavigationRenderer navigationPage)
+        {
+            _navigationPage = navigationPage;
+            _viewsToAnimate = viewsToAnimate;
+            _operation = operation;
+        }
 
         public override async void AnimateTransition(IUIViewControllerContextTransitioning transitionContext)
         {
@@ -48,24 +33,15 @@ namespace EvoTransitions.iOS.Transitions
             containerView.InsertSubview(toViewController.View, 0);
             toViewController.View.Alpha = 0;
 
-            //iterate to destination views, just to be sure to dont start transitions with views only in the start controller
-            for (var i = 0; i < _toView.Count; i++)
+            //iterate the destination views, this has two benefits:
+            //1) We are sure to dont start transitions with views only in the start controller
+            //2) With dynamic transitions (listview) we dont need to iterate al the tags we dont need
+            foreach (var viewToAnimate in _viewsToAnimate)
             {
-                if (_toView[i] == null || _fromView.Count == 0)
-                    break;
+                var toView   = viewToAnimate.ToView;
+                var fromView = viewToAnimate.FromView;
 
-                UIView fromView = null;
-                try
-                {
-                    fromView = _fromView.FirstOrDefault(x => x.Tag == _toView[i].Tag);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-
-                //No matching views in the start controller
-                if (fromView == null)
+                if (toView == null || fromView == null)
                     break;
 
                 UIView fromViewSnapshot;
@@ -75,7 +51,7 @@ namespace EvoTransitions.iOS.Transitions
                 {
                     //For buttons and labels just copy the view to preserve a good transition
                     //Using normal snapshot with labels and buttons may cause streched and deformed images
-                    fromViewSnapshot = (UIView)NSKeyedUnarchiver.UnarchiveObject(NSKeyedArchiver.ArchivedDataWithRootObject(fromView));                    
+                    fromViewSnapshot = (UIView)NSKeyedUnarchiver.UnarchiveObject(NSKeyedArchiver.ArchivedDataWithRootObject(fromView));
                 }
                 else if (fromView is UIImageView fromImageView)
                 {
@@ -100,34 +76,29 @@ namespace EvoTransitions.iOS.Transitions
                 if (_operation == UINavigationControllerOperation.Push)
                     await Task.Yield();
 
-                _toView[i].Alpha = 0;
+                toView.Alpha = 0;
                 fromView.Alpha = 0;
 
                 //If uimage, preserve aspect ratio on destination frame
-                CGRect toFrame = _toView[i] is UIImageView toImageView
+                CGRect toFrame = toView is UIImageView toImageView
                     ? toImageView.ConvertRectToView(toImageView.GetImageFrameWithAspectRatio(), containerView)
-                    : _toView[i].ConvertRectToView(_toView[i].Frame, containerView);
+                    : toView.ConvertRectToView(toView.Frame, containerView);
 
-                //Animate views,
-                //saving the counter in an external variable is needed to avoid unexpected behaviours
-                var viewCont = i;
                 UIView.Animate(TransitionDuration(transitionContext), 0, UIViewAnimationOptions.CurveEaseInOut, () =>
                 {
                     fromViewSnapshot.Frame = toFrame;
                     fromViewSnapshot.Alpha = 1;
-
                 }, () =>
                 {
-                    _toView[viewCont].Alpha = 1;
-                    _fromView[viewCont].Alpha = 1;
-
+                    toView.Alpha = 1;
+                    fromView.Alpha = 1;
                     fromViewSnapshot.RemoveFromSuperview();
                 });
             }
 
             containerView.InsertSubview(toViewController.View, 1);
 
-            if (_backgroundTransition == BackgroundTransition.None)
+            if (_navigationPage.BackgroundAnimation == BackgroundAnimation.None)
             {
                 UIView.Animate(0, 0, UIViewAnimationOptions.TransitionNone, () =>
                 {
@@ -140,21 +111,22 @@ namespace EvoTransitions.iOS.Transitions
                 {
                     toViewController.View.Alpha = 1;
                     fromViewController.View.Alpha = 0;
-                }, () => { transitionContext.CompleteTransition(!transitionContext.TransitionWasCancelled); });
+                }, () =>
+                {
+                    //Fix 1 for swipe + pop to root
+                    fromViewController.View.Alpha = 1; 
+                    transitionContext.CompleteTransition(!transitionContext.TransitionWasCancelled);
+
+                    //Fix 2 for swipe + pop to root
+                    if (transitionContext.TransitionWasCancelled)
+                        fromViewController.View.Alpha = 1;
+                });
             }
         }
 
         public override double TransitionDuration(IUIViewControllerContextTransitioning transitionContext)
         {
-            return _sharedTransitionDuration;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            MessagingCenter.Unsubscribe<SharedTransitionNavigationRenderer>(this, "UpdateBackgroundTransition");
-            MessagingCenter.Unsubscribe<SharedTransitionNavigationRenderer>(this, "UpdateSharedTransitionDuration");
-
-            base.Dispose(disposing);
+            return _navigationPage.SharedTransitionDuration;
         }
     }
 }

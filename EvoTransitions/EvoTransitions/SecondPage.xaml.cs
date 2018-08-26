@@ -11,13 +11,18 @@ namespace EvoTransitions
         {
             InitializeComponent();
 
-            SharedTransitionNavigationPage.SetBackgroundTransition(this, BackgroundTransition.None);
-            SharedTransitionNavigationPage.SetSharedTransitionDurationProperty(this, 500);
+            SharedTransitionNavigationPage.SetBackgroundAnimation(this, BackgroundAnimation.None);
+            SharedTransitionNavigationPage.SetSharedTransitionDuration(this, 500);
         }
 
         private void ImageTapped(object sender, EventArgs e)
         {
             Navigation.PushAsync(new ThirdPage());
+        }
+
+        private void Button_OnClicked(object sender, EventArgs e)
+        {
+            DisplayAlert("ok", "cliccato", "si");
         }
     }
 }

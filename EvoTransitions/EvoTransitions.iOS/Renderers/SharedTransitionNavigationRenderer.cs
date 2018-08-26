@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
 using EvoTransitions.Controls;
+using EvoTransitions.Effects;
 using EvoTransitions.Enums;
-using EvoTransitions.iOS.Extensions;
 using EvoTransitions.iOS.Renderers;
 using EvoTransitions.iOS.Transitions;
 using Foundation;
@@ -16,33 +19,36 @@ namespace EvoTransitions.iOS.Renderers
 {
     public class SharedTransitionNavigationRenderer : NavigationRenderer, IUINavigationControllerDelegate, IUIGestureRecognizerDelegate
     {
-        UIPercentDrivenInteractiveTransition _percentDrivenInteractiveTransition;
         public double SharedTransitionDuration { get; set; }
-        public BackgroundTransition BackgroundTransition { get; set; }
+        public BackgroundAnimation BackgroundAnimation { get; set; }
+        private int _selectedGroup;
 
-        Page _current;
-        public Page Current
+        Page _propertiesContainer;
+        public Page PropertiesContainer
         {
-            get => _current;
+            get => _propertiesContainer;
             set
             {
-                if (_current == value)
+                if (_propertiesContainer == value)
                     return;
 
-                if (_current != null)
-                    _current.PropertyChanged -= HandleChildPropertyChanged;
+                if (_propertiesContainer != null)
+                    _propertiesContainer.PropertyChanged -= HandleChildPropertyChanged;
 
-                _current = value;
+                _propertiesContainer = value;
 
-                if (_current != null)
-                    _current.PropertyChanged += HandleChildPropertyChanged;
+                if (_propertiesContainer != null)
+                    _propertiesContainer.PropertyChanged += HandleChildPropertyChanged;
 
                 UpdateBackgroundTransition();
                 UpdateSharedTransitionDuration();
+                UpdateSelectedGroup();
             }
         }
 
-        NavigationPage NavPage => Element as NavigationPage;
+        UIPercentDrivenInteractiveTransition _percentDrivenInteractiveTransition;
+        SharedTransitionNavigationPage NavPage => Element as SharedTransitionNavigationPage;
+        bool _popToRoot;
 
         public SharedTransitionNavigationRenderer() : base()
         {
@@ -52,14 +58,44 @@ namespace EvoTransitions.iOS.Renderers
         [Export("navigationController:animationControllerForOperation:fromViewController:toViewController:")]
         public IUIViewControllerAnimatedTransitioning GetAnimationControllerForOperation(UINavigationController navigationController, UINavigationControllerOperation operation, UIViewController fromViewController, UIViewController toViewController)
         {
-            var toView = toViewController.View.GetSubviewsWithTag();
-            var fromView = new List<UIView>();
+            if (!_popToRoot)
+            {
+                //At this point the property TargetPage refers to the view we are pushing or popping
+                //This view is not yet visible in our app but the variable is already set
+                var viewsToAnimate = new List<(UIView ToView, UIView FromView)>();
 
-            //Filter all the sourceviews with the same tags
-            foreach (var view in toView)
-                fromView.Add(fromViewController.View.ViewWithTag(view.Tag));
+                //this is due the overridden management of pop and push
+                var destinationPage = operation == UINavigationControllerOperation.Push
+                    ? NavPage.CurrentPage
+                    : PropertiesContainer;
 
-            return new NavigationTransition(fromView, toView, operation, BackgroundTransition, SharedTransitionDuration);
+                //Get all the views with tags in the destination page
+                //With this, we are sure to dont start transitions with no mathing tags in destination
+                //When popping, take only the tags with the selected group (if any).
+                //This is to avoid to search al the views in a listview (if any)
+                var mapStack = NavPage.TagMap.GetMap(destinationPage, operation == UINavigationControllerOperation.Pop ? _selectedGroup : 0);
+                
+                foreach (var tagMap in mapStack)
+                {
+                    var toView = toViewController.View.ViewWithTag(tagMap.Tag);
+                    if (toView != null)
+                    {
+                        //get the matching tag, taking in consideration the GroupTags for dynamic transitions (listview <--> details)
+                        //we store the destination view and the corrispondent tag for the source view, so we can match them during transition
+                        var correspondingTag = TransitionEffect.GetUniqueTag((int) toView.Tag, _selectedGroup, operation == UINavigationControllerOperation.Pop);
+                        var fromView = fromViewController.View.ViewWithTag(correspondingTag);
+
+                        if (fromView != null)
+                            viewsToAnimate.Add((toView, fromView));
+                    }
+                }
+
+                //No view to animate = standard push & pop
+                if (viewsToAnimate.Any())
+                    return new NavigationTransition(viewsToAnimate, operation, this);
+            }
+
+            return null;
         }
 
         [Export("navigationController:interactionControllerForAnimationController:")]
@@ -68,21 +104,38 @@ namespace EvoTransitions.iOS.Renderers
             return _percentDrivenInteractiveTransition;
         }
 
+        //During PopToRoot we skip everything and make the default animation
+        protected override async Task<bool> OnPopToRoot(Page page, bool animated)
+        {
+            _popToRoot = true;
+            var result = await base.OnPopToRoot(page, true);
+            _popToRoot = false;
+
+            return result;
+        }
+
         public override UIViewController PopViewController(bool animated)
         {
             //We need to take the transition configuration from the destination page
-            //So we need to anticipate it in the Current property before pop occour
+            //At this point the pop is not started so we need to go back in the stack
             var pageCount = Element.Navigation.NavigationStack.Count;
             if (pageCount > 1)
-                Current = Element.Navigation.NavigationStack[pageCount - 2];
+                PropertiesContainer = Element.Navigation.NavigationStack[pageCount - 2];
 
-            return base.PopViewController(animated);
+            return base.PopViewController(animated); ;
         }
-
+        
         public override void PushViewController(UIViewController viewController, bool animated)
         {
+            //We need to take the transition configuration from the page we are leaving page
+            //At this point the current page in the navigation stack is already set with the page we are pusing
+            //So we need to go back in the stack to retrieve what we want
+            var pageCount = Element.Navigation.NavigationStack.Count;
+            PropertiesContainer = pageCount > 1 
+                ? Element.Navigation.NavigationStack[pageCount - 2] 
+                : NavPage.CurrentPage;
+
             base.PushViewController(viewController, animated);
-            Current = NavPage.CurrentPage;
         }
 
         public override void ViewDidLoad()
@@ -119,13 +172,10 @@ namespace EvoTransitions.iOS.Renderers
 
                 case UIGestureRecognizerState.Ended:
                     if (percent > 0.5 || sender.VelocityInView(sender.View).X > 300)
-                    {
                         _percentDrivenInteractiveTransition.FinishInteractiveTransition();
-                    }
                     else
-                    {
                         _percentDrivenInteractiveTransition.CancelInteractiveTransition();
-                    }
+
                     _percentDrivenInteractiveTransition = null;
                     break;
             }
@@ -133,26 +183,33 @@ namespace EvoTransitions.iOS.Renderers
 
         void HandleChildPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == SharedTransitionNavigationPage.BackgroundTransitionProperty.PropertyName)
+            if (e.PropertyName == SharedTransitionNavigationPage.BackgroundAnimationProperty.PropertyName)
             {
                 UpdateBackgroundTransition();
-                MessagingCenter.Send(this, "UpdateBackgroundTransition");
             }
             else if (e.PropertyName == SharedTransitionNavigationPage.SharedTransitionDurationProperty.PropertyName)
             {
                 UpdateSharedTransitionDuration();
-                MessagingCenter.Send(this, "UpdateSharedTransitionDuration");
-            }    
+            }
+            else if (e.PropertyName == SharedTransitionNavigationPage.SelectedTagGroupProperty.PropertyName)
+            {
+                UpdateSelectedGroup();
+            }
         }
 
         void UpdateBackgroundTransition()
         {
-            BackgroundTransition = SharedTransitionNavigationPage.GetBackgroundTransition(Current);
+            BackgroundAnimation = SharedTransitionNavigationPage.GetBackgroundAnimation(PropertiesContainer);
         }
 
         void UpdateSharedTransitionDuration()
         {
-            SharedTransitionDuration = (double) SharedTransitionNavigationPage.GetSharedTransitionDurationProperty(Current) / 1000;
+            SharedTransitionDuration = (double) SharedTransitionNavigationPage.GetSharedTransitionDuration(PropertiesContainer) / 1000;
+        }
+
+        void UpdateSelectedGroup()
+        {
+            _selectedGroup = SharedTransitionNavigationPage.GetSelectedTagGroup(PropertiesContainer);
         }
     }
 }

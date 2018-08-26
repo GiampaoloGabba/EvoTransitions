@@ -93,7 +93,7 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Effects\TagEffect.cs" />
+    <Compile Include="Effects\TransitionMapEffect.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />

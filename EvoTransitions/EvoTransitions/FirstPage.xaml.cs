@@ -10,12 +10,19 @@ namespace EvoTransitions
         public FirstPage()
         {
             InitializeComponent();
-            SharedTransitionNavigationPage.SetBackgroundTransition(this,BackgroundTransition.Fade);
+            SharedTransitionNavigationPage.SetBackgroundAnimation(this,BackgroundAnimation.Fade);
+            SharedTransitionNavigationPage.SetSharedTransitionDuration(this, 500);
         }
 
         private async void ImageTapped(object sender, TappedEventArgs e)
         {
+            SharedTransitionNavigationPage.SetSelectedTagGroup(this,1);
             await Navigation.PushAsync(new SecondPage());
+        }
+
+        private void Button_OnClicked(object sender, EventArgs e)
+        {
+            DisplayAlert("ok", "cliccato", "si");
         }
     }
 }

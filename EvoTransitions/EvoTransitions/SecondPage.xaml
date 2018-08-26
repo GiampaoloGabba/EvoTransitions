@@ -13,9 +13,9 @@
                 <TapGestureRecognizer Tapped="ImageTapped"/>
             </StackLayout.GestureRecognizers>
 
-            <Image Source="mydog.jpg" effects:TagEffect.Tag="1" WidthRequest="100" HorizontalOptions="Center" VerticalOptions="Start"/>
-            <Image Source="mydog.jpg" effects:TagEffect.Tag="2" HorizontalOptions="Center" VerticalOptions="Start" />
-            <Button Text=" Button " effects:TagEffect.Tag="3" BackgroundColor="Aqua" />
+            <Image Source="mydog.jpg" effects:TransitionEffect.Tag="1" WidthRequest="100" HorizontalOptions="Center" VerticalOptions="Start"/>
+            <Image Source="mydog.jpg" effects:TransitionEffect.Tag="2" HorizontalOptions="Center" VerticalOptions="Start" />
+            <Button Text=" Button " effects:TransitionEffect.Tag="3" BackgroundColor="Aqua"  Clicked="Button_OnClicked"/>
         </StackLayout>
     </StackLayout>
 

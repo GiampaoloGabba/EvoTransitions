@@ -7,28 +7,6 @@ namespace EvoTransitions.iOS.Extensions
 {
     public static class ViewExtensions
     {
-        public static List<UIView> GetSubviewsWithTag(this UIView startView)
-        {
-            var result = new List<UIView>();
-            if (startView.Tag > 0)
-                result.Add(startView);
-
-            Traverse(startView);
-
-            void Traverse(UIView parentView)
-            {
-                foreach (var view in parentView.Subviews)
-                {
-                    if (view.Tag > 0)
-                        result.Add(view);
-
-                    Traverse(view);
-                }
-            }
-
-            return result;
-        }
-
         public static CGRect GetImageFrameWithAspectRatio(this UIImageView imageView)
         {
             nfloat aspect = imageView.Image.Size.Width / imageView.Image.Size.Height;

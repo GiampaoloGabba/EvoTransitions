@@ -58,8 +58,7 @@
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effects\TagEffect.cs" />
-    <Compile Include="Extensions\ViewExtensions.cs" />
+    <Compile Include="Effects\TransitionMapEffect.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Renderers\SharedTransitionNavigationPageRenderer.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

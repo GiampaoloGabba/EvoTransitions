@@ -5,4 +5,5 @@ Activate shared element transitions between pages in Xamarin.Forms (IOS/Android)
 https://github.com/Evolutionlab/Xamarin.Plugin.SharedTransitions**
 
 <br>
-<img src="https://raw.githubusercontent.com/Evolutionlab/Xamarin.Plugin.SharedTransitions/master/images/transition_droid_new.gif" height="500">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Evolutionlab/Xamarin.Plugin.SharedTransitions/master/images/transition_ios_new.gif" height="500">
+<img src="https://raw.githubusercontent.com/Evolutionlab/Xamarin.Plugin.SharedTransitions/master/images/transition_droid_new.gif" height="500">
+ <img src="https://raw.githubusercontent.com/Evolutionlab/Xamarin.Plugin.SharedTransitions/master/images/transition_ios_new.gif" height="500">
